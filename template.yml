@@ -14,14 +14,16 @@ Mappings:
       RegionShortName: ''
     us-west-1:
       RegionShortName: 'uw1'
+    us-east-2:
+      RegionShortName: 'ue2'
 
 Resources:
-  ContactDynamoDB:
+  ContactDynamoDBJulianParra:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      TableName: contact
+      TableName: contact-julianparra
       AttributeDefinitions:
         - AttributeName: "email"
           AttributeType: "S"
@@ -33,12 +35,12 @@ Resources:
         WriteCapacityUnits: "1"
       Tags:
         - Key: "SYSTEM"
-          Value: work-shop
+          Value: work-shop-julianparra
 
-  ContactApi:
+  ContactApiJulianParra:
     Type: AWS::Serverless::Api
     Properties:
-      Name: contact-api
+      Name: contact-api-julianparra
       EndpointConfiguration: REGIONAL
       StageName: prod
       Cors:
@@ -46,32 +48,32 @@ Resources:
         AllowMethods: "'DELETE,GET,OPTIONS,POST,PUT'"
         AllowOrigin: "'*'"
 
-  ContactCreateLambda:
+  ContactCreateLambdaJulianParra:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: contact-create
+      FunctionName: contact-create-julianparra
       CodeUri: build/create
-      Role: !GetAtt ContactCreateRole.Arn
+      Role: !GetAtt ContactCreateRoleJulianParra.Arn
       Environment:
         Variables:
-          TABLE_NAME_CONTACTS: !Ref ContactDynamoDB
+          TABLE_NAME_CONTACTS: !Ref ContactDynamoDBJulianParra
       Tags:
-        SYSTEM: 'work-shop'
+        SYSTEM: 'work-shop-julianparra'
       Events:
         CreateRequest:
           Type: Api
           Properties:
-            RestApiId: !Ref ContactApi
+            RestApiId: !Ref ContactApiJulianParra
             Path: /
             Method: POST
 
-  ContactCreateRole:
+  ContactCreateRoleJulianParra:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub
-        - 'ContactCreateRole${region}'
+        - 'ContactCreateRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Create contact role
+      Description: Create contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -87,7 +89,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
         - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
       Policies:
-        - PolicyName: DynamoDBPolicy
+        - PolicyName: DynamoDBPolicyJulianParra
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -95,45 +97,44 @@ Resources:
                 Action:
                   - dynamodb:GetItem
                   - dynamodb:PutItem
-                Resource: !GetAtt ContactDynamoDB.Arn  
+                Resource: !GetAtt ContactDynamoDBJulianParra.Arn
 
-  ContactCreateLogGroup:
+  ContactCreateLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub
         - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactCreateLambda
+        - MyLambdaFunction: !Ref ContactCreateLambdaJulianParra
       RetentionInDays: 7
 
-
-  ContactDeleteLambda:
+  ContactDeleteLambdaJulianParra:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: contact-delete
+      FunctionName: contact-delete-julianparra
       CodeUri: build/delete
-      Role: !GetAtt ContactDeleteRole.Arn
+      Role: !GetAtt ContactDeleteRoleJulianParra.Arn
       Environment:
         Variables:
-          TABLE_NAME_CONTACTS: !Ref ContactDynamoDB
+          TABLE_NAME_CONTACTS: !Ref ContactDynamoDBJulianParra
       Tags:
-        SYSTEM: 'work-shop'
+        SYSTEM: 'work-shop-julianparra'
       Events:
         DeleteRequest:
           Type: Api
           Properties:
-            RestApiId: !Ref ContactApi
+            RestApiId: !Ref ContactApiJulianParra
             Path: /{email}
             Method: DELETE
 
-  ContactDeleteRole:
+  ContactDeleteRoleJulianParra:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub
-        - 'ContactDeleteRole${region}'
+        - 'ContactDeleteRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Delete contact role
+      Description: Delete contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -149,7 +150,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
         - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
       Policies:
-        - PolicyName: DynamoDBPolicy
+        - PolicyName: DynamoDBPolicyJulianParra
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -157,44 +158,44 @@ Resources:
                 Action:
                   - dynamodb:GetItem
                   - dynamodb:DeleteItem
-                Resource: !GetAtt ContactDynamoDB.Arn  
+                Resource: !GetAtt ContactDynamoDBJulianParra.Arn
 
-  ContactDeleteLogGroup:
+  ContactDeleteLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub
         - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactDeleteLambda
-      RetentionInDays: 7      
+        - MyLambdaFunction: !Ref ContactDeleteLambdaJulianParra
+      RetentionInDays: 7
 
-  ContactGetLambda:
+  ContactGetLambdaJulianParra:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: contact-get
+      FunctionName: contact-get-julianparra
       CodeUri: build/get
-      Role: !GetAtt ContactGetRole.Arn
+      Role: !GetAtt ContactGetRoleJulianParra.Arn
       Environment:
         Variables:
-          TABLE_NAME_CONTACTS: !Ref ContactDynamoDB
+          TABLE_NAME_CONTACTS: !Ref ContactDynamoDBJulianParra
       Tags:
-        SYSTEM: 'work-shop'
+        SYSTEM: 'work-shop-julianparra'
       Events:
         GetRequest:
           Type: Api
           Properties:
-            RestApiId: !Ref ContactApi
+            RestApiId: !Ref ContactApiJulianParra
             Path: /{email}
             Method: GET
 
-  ContactGetRole:
+  ContactGetRoleJulianParra:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub
-        - 'ContactGetRole${region}'
+        - 'ContactGetRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Get contact role
+      Description: Get contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -210,51 +211,51 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
         - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
       Policies:
-        - PolicyName: DynamoDBPolicy
+        - PolicyName: DynamoDBPolicyJulianParra
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
                   - dynamodb:GetItem
-                Resource: !GetAtt ContactDynamoDB.Arn  
+                Resource: !GetAtt ContactDynamoDBJulianParra.Arn
 
-  ContactGetLogGroup:
+  ContactGetLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub
         - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactGetLambda
-      RetentionInDays: 7      
+        - MyLambdaFunction: !Ref ContactGetLambdaJulianParra
+      RetentionInDays: 7
 
-  ContactUpdateLambda:
+  ContactUpdateLambdaJulianParra:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: contact-update
+      FunctionName: contact-update-julianparra
       CodeUri: build/update
-      Role: !GetAtt ContactUpdateRole.Arn
+      Role: !GetAtt ContactUpdateRoleJulianParra.Arn
       Environment:
         Variables:
-          TABLE_NAME_CONTACTS: !Ref ContactDynamoDB
+          TABLE_NAME_CONTACTS: !Ref ContactDynamoDBJulianParra
       Tags:
-        SYSTEM: 'work-shop'
+        SYSTEM: 'work-shop-julianparra'
       Events:
         PutRequest:
           Type: Api
           Properties:
-            RestApiId: !Ref ContactApi
+            RestApiId: !Ref ContactApiJulianParra
             Path: /{email}
             Method: PUT
 
-  ContactUpdateRole:
+  ContactUpdateRoleJulianParra:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub
-        - 'ContactUpdateRole${region}'
+        - 'ContactUpdateRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Update contact role
+      Description: Update contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -270,7 +271,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
         - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
       Policies:
-        - PolicyName: DynamoDBPolicy
+        - PolicyName: DynamoDBPolicyJulianParra
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -278,18 +279,14 @@ Resources:
                 Action:
                   - dynamodb:GetItem
                   - dynamodb:UpdateItem
-                Resource: !GetAtt ContactDynamoDB.Arn  
+                Resource: !GetAtt ContactDynamoDBJulianParra.Arn
 
-  ContactUpdateLogGroup:
+  ContactUpdateLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub
         - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactUpdateLambda
-      RetentionInDays: 7      
-
-
-
-
+        - MyLambdaFunction: !Ref ContactUpdateLambdaJulianParra
+      RetentionInDays: 7
