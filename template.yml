@@ -23,7 +23,7 @@ Resources:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      TableName: contact-julianparra
+      TableName: contact-julianparra-v2
       AttributeDefinitions:
         - AttributeName: "email"
           AttributeType: "S"
@@ -31,8 +31,8 @@ Resources:
         - AttributeName: "email"
           KeyType: "HASH"
       ProvisionedThroughput:
-        ReadCapacityUnits: "1"
-        WriteCapacityUnits: "1"
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       Tags:
         - Key: "SYSTEM"
           Value: work-shop-julianparra
@@ -73,7 +73,6 @@ Resources:
       RoleName: !Sub
         - 'ContactCreateRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Create contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -101,12 +100,8 @@ Resources:
 
   ContactCreateLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
-      LogGroupName: !Sub
-        - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactCreateLambdaJulianParra
+      LogGroupName: !Sub /aws/lambda/contact-create-julianparra
       RetentionInDays: 7
 
   ContactDeleteLambdaJulianParra:
@@ -134,7 +129,6 @@ Resources:
       RoleName: !Sub
         - 'ContactDeleteRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Delete contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -162,12 +156,8 @@ Resources:
 
   ContactDeleteLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
-      LogGroupName: !Sub
-        - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactDeleteLambdaJulianParra
+      LogGroupName: !Sub /aws/lambda/contact-delete-julianparra
       RetentionInDays: 7
 
   ContactGetLambdaJulianParra:
@@ -195,7 +185,6 @@ Resources:
       RoleName: !Sub
         - 'ContactGetRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Get contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -222,12 +211,8 @@ Resources:
 
   ContactGetLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
-      LogGroupName: !Sub
-        - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactGetLambdaJulianParra
+      LogGroupName: !Sub /aws/lambda/contact-get-julianparra
       RetentionInDays: 7
 
   ContactUpdateLambdaJulianParra:
@@ -255,7 +240,6 @@ Resources:
       RoleName: !Sub
         - 'ContactUpdateRoleJulianParra${region}'
         - region: !FindInMap [RegionMap, !Ref 'AWS::Region', RegionShortName]
-      Description: Update contact role Julian Parra
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -283,10 +267,6 @@ Resources:
 
   ContactUpdateLogGroupJulianParra:
     Type: AWS::Logs::LogGroup
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
     Properties:
-      LogGroupName: !Sub
-        - /aws/lambda/${MyLambdaFunction}
-        - MyLambdaFunction: !Ref ContactUpdateLambdaJulianParra
+      LogGroupName: !Sub /aws/lambda/contact-update-julianparra
       RetentionInDays: 7
